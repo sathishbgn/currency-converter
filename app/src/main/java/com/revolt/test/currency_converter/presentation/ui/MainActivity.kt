@@ -1,7 +1,8 @@
-package com.revolt.test.currency_converter
+package com.revolt.test.currency_converter.presentation.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.revolt.test.currency_converter.R
 
 class MainActivity : AppCompatActivity() {
 
