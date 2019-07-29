@@ -5,7 +5,7 @@ import kotlinx.coroutines.Deferred
 import retrofit2.Response
 import retrofit2.http.GET
 
-interface CurrencyService {
+interface CurrencyApi {
 
     @GET("/latest?base=EUR")
     fun getCurrencyList() : Deferred<Response<CurrencyEntity>>

@@ -12,5 +12,5 @@ data class CurrencyEntity(
 
     @SerializedName("rates")
     @Expose
-    val rates: HashMap<String, Int>?
+    val rates: HashMap<String, Double>?
 )

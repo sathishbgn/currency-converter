@@ -1,7 +1,7 @@
 package com.revolt.test.currency_converter.data.network
 
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
 
 class OkHttpBuilder {
@@ -9,15 +9,12 @@ class OkHttpBuilder {
         const val HTTP_TIMEOUT = 60L
     }
 
-    fun build(interceptors: Array<out Interceptor>): OkHttpClient {
+    fun build(): OkHttpClient {
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
         return OkHttpClient.Builder()
-            .readTimeout(HTTP_TIMEOUT, TimeUnit.SECONDS)
             .connectTimeout(HTTP_TIMEOUT, TimeUnit.SECONDS)
-            .apply {
-                interceptors.forEach {
-                    addInterceptor(it)
-                }
-            }
-            .build()
+            .readTimeout(HTTP_TIMEOUT, TimeUnit.SECONDS)
+            .addInterceptor(httpLoggingInterceptor).build()
     }
 }
