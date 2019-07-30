@@ -66,8 +66,9 @@ class MainActivity : AppCompatActivity(), CurrencyView, KoinComponent, CurrencyA
     }
 
     override fun onBackPressed() {
-        presenter.onDestroy()
         super.onBackPressed()
+        presenter.onDestroy()
+        finish()
     }
 
     override fun onDestroy() {

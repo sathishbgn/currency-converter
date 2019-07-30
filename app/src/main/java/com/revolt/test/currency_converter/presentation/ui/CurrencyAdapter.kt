@@ -101,7 +101,10 @@ class CurrencyTextChangedListener(private val currencyDisplay: MutableList<Curre
         timer?.schedule(
             object : TimerTask() {
                 override fun run() {
-                    val editAmount = s.toString()
+                    var editAmount = s.toString()
+                    if (editAmount.isEmpty()){
+                        editAmount = "0"
+                    }
 
                     //convert euro based on the editText
                     for (currency in currencyDisplay) {
