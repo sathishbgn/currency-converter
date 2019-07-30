@@ -8,34 +8,34 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
+import kotlin.concurrent.timerTask
 
 class CurrencyPresenter(var useCase: CurrencyCase)  {
 
     private var coroutineJob: Job = Job()
     private var currencyView: CurrencyView? = null
+    private val timer = Timer()
 
-//    private var job: Job = Job()
-//    private val scope = CoroutineScope(coroutineJob + Dispatchers.Default)
+    companion object {
+        private const val timeDelay = 60000L
+    }
 
     fun setView(view: CurrencyView) {
         currencyView = view
     }
 
+    fun start() {
+        currencyView?.showLoading()
+        timer.schedule(timerTask { callApi() }, 0, timeDelay)
+    }
+
+
     fun callApi() {
-//        scope.launch {
-//            val currencyList = useCase.getCurrencyList()?.let {
-//                it.currencyList.map { currency ->
-//                    CurrencyDisplay(currency.countryCode, currency.rate)
-//                }
-//            }
-//            currencyView?.loadCurrencies(currencyList)
-//            currencyView?.hideLoading()
-//        }
         coroutineJob = CoroutineScope(Dispatchers.IO).launch {
-                currencyView?.showLoading()
                 val currencyList = useCase.getCurrencyList()?.let {
                     it.currencyList.map { currency ->
-                        CurrencyDisplay(currency.countryCode, currency.rate)
+                        CurrencyDisplay(currency.countryCode, currency.rate, calculateLocalCurrency(currency.rate))
                     }
                 }
                 withContext(Dispatchers.Main) {
@@ -45,8 +45,14 @@ class CurrencyPresenter(var useCase: CurrencyCase)  {
         }
     }
 
-    fun onDestroy() {
-        coroutineJob.cancel()
+    private fun calculateLocalCurrency(localCurrency: Double): Double = 1 / localCurrency
+
+    fun cancelTimer() {
+        timer.cancel()
     }
 
+    fun onDestroy() {
+        cancelTimer()
+        coroutineJob.cancel()
+    }
 }
